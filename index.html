@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התנסות NotebookLM - רשת אמית</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Heebo for modern Hebrew typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: #f0f4f8;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(163, 230, 53, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(30, 58, 138, 0.1) 0px, transparent 50%);
+            overflow-x: hidden; /* Prevent horizontal scroll during transitions */
+        }
+
+        /* Amit Network Brand Colors */
+        .amit-blue { color: #002b5c; }
+        .bg-amit-blue { background-color: #002b5c; }
+        .amit-green { color: #9ccb3b; }
+        .text-amit-green { color: #9ccb3b; }
+        .bg-amit-green { background-color: #9ccb3b; }
+        .amit-cyan { color: #009fe3; }
+        
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Page Transitions */
+        .page-container {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease-in-out;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .page-active {
+            transform: translateX(0);
+            opacity: 1;
+            position: relative; /* Back to flow */
+            z-index: 10;
+        }
+
+        .page-hidden-right {
+            transform: translateX(110%);
+            opacity: 0;
+            display: none;
+        }
+
+        .page-hidden-left {
+            transform: translateX(-110%);
+            opacity: 0;
+            display: none;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-color: #9ccb3b;
+        }
+
+        /* Modal Styles */
+        .modal {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .modal.visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Video Link Item Hover */
+        .video-link:hover {
+            background-color: #f8fafc;
+            border-color: #9ccb3b;
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4 text-slate-800">
+
+    <!-- Header Section -->
+    <header class="w-full max-w-4xl text-center mb-6 fade-in-up z-20 relative">
+        <h1 class="text-4xl md:text-6xl font-black amit-blue mb-2 tracking-tight cursor-pointer" onclick="goToPage(1)">
+            התנסות <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">NotebookLM</span>
+        </h1>
+        <div class="h-1 w-24 bg-amit-green mx-auto rounded-full mt-4"></div>
+    </header>
+
+    <!-- Main Content Area with Pages -->
+    <main class="w-full max-w-4xl relative min-h-[500px]">
+        
+        <!-- PAGE 1: Introduction -->
+        <div id="page-1" class="page-container page-active">
+            <section class="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 mb-10 border-t-4 border-amit-blue fade-in-up delay-100 flex flex-col relative">
+                <h2 class="text-2xl font-bold mb-4 text-slate-800">ברוכים הבאים להתנסות בלמידה עצמאית 🎓</h2>
+                
+                <p class="text-lg leading-relaxed mb-6 text-slate-600">
+                    ההתנסות היא מונחית AI, על בסיס השיעור ששלחתם 😊<br>
+                    ננסה להיכנס לנעליו של תלמיד שרוצה ללמוד או לחזור על תוכן השיעור, לקראת אירוע הערכה.
+                </p>
+
+                <div class="bg-blue-50 rounded-xl p-6 border border-blue-100 mb-8">
+                    <h3 class="font-bold text-amit-blue mb-3 text-lg">בחרו אחת או יותר מהדרכים הבאות ללמידה:</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <div class="bg-white p-1.5 rounded-full shadow-sm ml-3 mt-0.5 text-amit-green">
+                                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            </div>
+                            <span><span class="font-bold text-slate-700">התכתבות עם ה-AI</span> על תכני השיעור.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="bg-white p-1.5 rounded-full shadow-sm ml-3 mt-0.5 text-amit-cyan">
+                                <i data-lucide="headphones" class="w-5 h-5"></i>
+                            </div>
+                            <span><span class="font-bold text-slate-700">בחירת דרך למידה מהסטודיו</span> – סקירה קולית / סקירת וידאו / מצגת.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="bg-white p-1.5 rounded-full shadow-sm ml-3 mt-0.5 text-purple-500">
+                                <i data-lucide="check-square" class="w-5 h-5"></i>
+                            </div>
+                            <span><span class="font-bold text-slate-700">בחירת דרך תרגול מהסטודיו</span> – כרטיסי עזר / בוחן.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <p class="text-center font-bold text-xl mb-6 text-amit-blue">תיהנו מההתנסות!</p>
+
+                <!-- Next Page Button -->
+                <button onclick="goToPage(2)" 
+                        class="mx-auto flex items-center gap-2 bg-amit-green text-white px-8 py-4 rounded-full font-bold shadow-md hover:bg-green-600 transition-all hover:shadow-lg group text-lg">
+                    המשך לבחירת מקצוע
+                    <i data-lucide="arrow-left" class="w-6 h-6 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+            </section>
+        </div>
+
+        <!-- PAGE 2: Subject Selection -->
+        <div id="page-2" class="page-container page-hidden-right">
+            
+            <!-- Navigation Back (Breadcrumb style) -->
+            <button onclick="goToPage(1)" class="mb-6 flex items-center gap-1 text-slate-500 hover:text-amit-blue transition-colors text-sm font-bold">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                חזרה להסבר
+            </button>
+
+            <h3 class="text-2xl font-bold text-center mb-8 text-slate-700 flex items-center justify-center gap-2">
+                <i data-lucide="mouse-pointer-2" class="w-6 h-6 text-amit-green"></i>
+                בחירת מקצוע
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+                
+                <!-- Card: Hebrew -->
+                <a href="https://notebooklm.google.com/notebook/a3996b13-6d6a-4451-b738-4f93c3ce9962" target="_blank" class="card-hover group bg-white rounded-xl p-6 shadow-md border border-slate-100 flex items-center gap-4 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-orange-400 group-hover:w-2 transition-all"></div>
+                    <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                        <span class="font-serif font-black text-2xl">א</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800">עברית</h4>
+                    </div>
+                    <i data-lucide="external-link" class="mr-auto w-5 h-5 text-slate-300 group-hover:text-orange-400 transition-colors"></i>
+                </a>
+
+                <!-- Card: Bible -->
+                <a href="https://notebooklm.google.com/notebook/deda7273-5874-4d98-9525-5c9adebc16bd" target="_blank" class="card-hover group bg-white rounded-xl p-6 shadow-md border border-slate-100 flex items-center gap-4 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-amber-600 group-hover:w-2 transition-all"></div>
+                    <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                        <i data-lucide="scroll-text" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800">תנ"ך חמ"ד</h4>
+                    </div>
+                    <i data-lucide="external-link" class="mr-auto w-5 h-5 text-slate-300 group-hover:text-amber-600 transition-colors"></i>
+                </a>
+
+                <!-- Card: Math -->
+                <a href="https://notebooklm.google.com/notebook/d1d637f2-9000-4503-bbb8-a6d994f9b352" target="_blank" class="card-hover group bg-white rounded-xl p-6 shadow-md border border-slate-100 flex items-center gap-4 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-red-500 group-hover:w-2 transition-all"></div>
+                    <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                        <i data-lucide="calculator" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800">מתמטיקה</h4>
+                    </div>
+                    <i data-lucide="external-link" class="mr-auto w-5 h-5 text-slate-300 group-hover:text-red-500 transition-colors"></i>
+                </a>
+
+                <!-- Card: Science -->
+                <a href="https://notebooklm.google.com/notebook/90a5f5b8-0d15-4d8c-9fc0-d725bb4a55b1" target="_blank" class="card-hover group bg-white rounded-xl p-6 shadow-md border border-slate-100 flex items-center gap-4 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-emerald-500 group-hover:w-2 transition-all"></div>
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                        <i data-lucide="flask-conical" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800">מדעים</h4>
+                    </div>
+                    <i data-lucide="external-link" class="mr-auto w-5 h-5 text-slate-300 group-hover:text-emerald-500 transition-colors"></i>
+                </a>
+
+                <!-- Card: Civics -->
+                <a href="https://notebooklm.google.com/notebook/d1e8776a-38e3-4c30-944c-7ded6c7a3fb0" target="_blank" class="card-hover group bg-white rounded-xl p-6 shadow-md border border-slate-100 flex items-center gap-4 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-blue-500 group-hover:w-2 transition-all"></div>
+                    <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                        <i data-lucide="landmark" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800">אזרחות</h4>
+                    </div>
+                    <i data-lucide="external-link" class="mr-auto w-5 h-5 text-slate-300 group-hover:text-blue-500 transition-colors"></i>
+                </a>
+
+                <!-- Card: Toshba -->
+                <a href="https://notebooklm.google.com/notebook/529512fb-a2dd-403e-9bac-18e1104d3a77" target="_blank" class="card-hover group bg-white rounded-xl p-6 shadow-md border border-slate-100 flex items-center gap-4 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-indigo-500 group-hover:w-2 transition-all"></div>
+                    <div class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                        <i data-lucide="book-open" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800">תושב"ע</h4>
+                    </div>
+                    <i data-lucide="external-link" class="mr-auto w-5 h-5 text-slate-300 group-hover:text-indigo-500 transition-colors"></i>
+                </a>
+
+                <!-- Card: History -->
+                <a href="https://notebooklm.google.com/notebook/4a5e3ce7-11a2-42fc-ae35-9969e08edf02" target="_blank" class="card-hover group bg-white rounded-xl p-6 shadow-md border border-slate-100 flex items-center gap-4 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-stone-500 group-hover:w-2 transition-all"></div>
+                    <div class="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 group-hover:bg-stone-500 group-hover:text-white transition-colors">
+                        <i data-lucide="hourglass" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800">היסטוריה</h4>
+                    </div>
+                    <i data-lucide="external-link" class="mr-auto w-5 h-5 text-slate-300 group-hover:text-stone-500 transition-colors"></i>
+                </a>
+
+                 <!-- Card: Humanities (Fake/Error) -->
+                 <button onclick="toggleModal('error-modal')" class="w-full text-right card-hover group bg-white rounded-xl p-6 shadow-md border border-slate-100 flex items-center gap-4 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-1.5 h-full bg-pink-500 group-hover:w-2 transition-all"></div>
+                    <div class="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center text-pink-500 group-hover:bg-pink-500 group-hover:text-white transition-colors">
+                        <i data-lucide="feather" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800">הומניסטיקה</h4>
+                    </div>
+                    <i data-lucide="alert-circle" class="mr-auto w-5 h-5 text-slate-300 group-hover:text-pink-500 transition-colors"></i>
+                </button>
+            </div>
+
+            <!-- Tutorials Button Section -->
+            <section class="w-full text-center">
+                <button onclick="toggleModal('tutorials-modal')" class="inline-flex items-center gap-2 text-slate-600 hover:text-amit-blue hover:bg-white px-4 py-2 rounded-full transition-all border border-transparent hover:border-slate-200">
+                    <i data-lucide="youtube" class="w-5 h-5 text-red-600"></i>
+                    <span class="font-bold underline decoration-amit-green decoration-2 underline-offset-4">סרטוני הדרכה על NotebookLM</span>
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto pt-10 text-center text-slate-400 text-sm z-20">
+        <div class="flex items-center justify-center gap-2 mb-2">
+            <div class="h-px w-10 bg-slate-300"></div>
+            <span class="font-bold text-amit-blue">מו"פ אמית</span>
+            <div class="h-px w-10 bg-slate-300"></div>
+        </div>
+    </footer>
+
+    <!-- Error Modal (Humanities) -->
+    <div id="error-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center transform transition-all scale-100 relative">
+            <button onclick="toggleModal('error-modal')" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
+                😢
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2">אופס...</h3>
+            <p class="text-slate-600 mb-6">לא שלחתם שיעור במקצוע זה.<br>אנא נסו מקצוע אחר.</p>
+            <button onclick="toggleModal('error-modal')" class="bg-amit-blue text-white px-6 py-2 rounded-full font-bold hover:bg-slate-800 transition-colors w-full">
+                הבנתי, תודה
+            </button>
+        </div>
+    </div>
+
+    <!-- Tutorials Modal (Updated to Menu) -->
+    <div id="tutorials-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 max-w-md w-full relative my-8">
+            <button onclick="toggleModal('tutorials-modal')" class="absolute top-4 left-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            
+            <h3 class="text-2xl font-bold text-amit-blue mb-6 flex items-center gap-2 pr-2">
+                <i data-lucide="monitor-play" class="w-6 h-6"></i>
+                סרטוני הדרכה
+            </h3>
+            
+            <p class="text-sm text-slate-500 mb-4">לחצו על נושא לצפייה בסרטון (ייפתח בטאב חדש):</p>
+
+            <div class="space-y-3">
+                <!-- Video 1 -->
+                <a href="https://www.youtube.com/watch?v=ElAhV2Qi5sA" target="_blank" class="video-link flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <span class="font-bold text-slate-700">מדריך כללי לשימוש</span>
+                    </div>
+                    <i data-lucide="external-link" class="w-4 h-4 text-slate-300 group-hover:text-amit-green"></i>
+                </a>
+
+                <!-- Video 2 -->
+                <a href="https://www.youtube.com/watch?v=Vz9iwn19sHo" target="_blank" class="video-link flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <span class="font-bold text-slate-700">טריק לעריכת מצגות</span>
+                    </div>
+                    <i data-lucide="external-link" class="w-4 h-4 text-slate-300 group-hover:text-amit-green"></i>
+                </a>
+
+                 <!-- Video 3 -->
+                 <a href="https://youtu.be/UooWJvmtGt8?si=f5RK3dlTCO31Jphc" target="_blank" class="video-link flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                            <i data-lucide="sparkles" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <span class="font-bold text-slate-700">שימוש ב-NotebookLM בג'מיני</span>
+                    </div>
+                    <i data-lucide="external-link" class="w-4 h-4 text-slate-300 group-hover:text-amit-green"></i>
+                </a>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button onclick="toggleModal('tutorials-modal')" class="text-slate-500 hover:text-amit-blue font-medium">סגור</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        function goToPage(pageNumber) {
+            const page1 = document.getElementById('page-1');
+            const page2 = document.getElementById('page-2');
+
+            if (pageNumber === 2) {
+                // Move Page 1 out to Left
+                page1.classList.remove('page-active');
+                page1.classList.add('page-hidden-left');
+                setTimeout(() => {
+                    page1.style.display = 'none';
+                }, 500); // Match CSS transition duration
+
+                // Move Page 2 in from Right
+                page2.style.display = 'block'; // Ensure it's rendered first
+                // Use setTimeout to allow display:block to apply before changing opacity/transform
+                requestAnimationFrame(() => {
+                    page2.classList.remove('page-hidden-right');
+                    page2.classList.add('page-active');
+                });
+                
+            } else if (pageNumber === 1) {
+                // Move Page 2 out to Right
+                page2.classList.remove('page-active');
+                page2.classList.add('page-hidden-right');
+                setTimeout(() => {
+                    page2.style.display = 'none';
+                }, 500);
+
+                // Move Page 1 in from Left
+                page1.style.display = 'block';
+                requestAnimationFrame(() => {
+                    page1.classList.remove('page-hidden-left');
+                    page1.classList.add('page-active');
+                });
+            }
+        }
+
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.add('visible'), 10);
+            } else {
+                modal.classList.remove('visible');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('visible');
+                setTimeout(() => event.target.classList.add('hidden'), 300);
+            }
+        }
+    </script>
+</body>
+</html>
